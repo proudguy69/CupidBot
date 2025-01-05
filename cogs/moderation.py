@@ -80,6 +80,8 @@ class Moderation(Cog):
                 timeout_time = await self.process_duration(duration)
                 await user.timeout(datetime.timedelta(seconds=timeout_time))
                 self.process_timeout(user, reason)
+            case CaseType.kick.value:
+                pass
                 
         case:Case = create_case(self.bot, interaction.guild_id, type.value, user, interaction.user, reason)
         await case.log_action()
