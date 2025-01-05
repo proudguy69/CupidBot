@@ -52,9 +52,15 @@ class Config():
     def __init__(self, bot:Bot, data:dict=None):
         self.bot = bot
         if not data: raise ConfigNotFoundException()
+        # level config stuff
         self.server = bot.get_guild(data.get('server_id'))
         self.rewards = LevelRewards(self.bot, data.get('level_rewards'),self.server)
         self.level_up_channel = self.server.get_channel(data.get('levelup_chan'))
+        # moderation config
+        self.mod_logs = self.server.get_channel(data.get('mod_logs_channel'))
+        self.action_logs = self.server.get_channel(data.get('action_logs_channel'))
+        self._id = data.get('_id')
+        self.doc = {'_id':self._id}
         self.data = data
 
     
