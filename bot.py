@@ -25,7 +25,7 @@ class Bot(Bot):
         self.add_view(SubmissionView(self))
         await self.add_cog(Levels(self))
         await self.add_cog(Moderation(self))
-        await self.add_cog(Config())
+        await self.add_cog(Config(self))
         await self.add_cog(Matching(self))
         await self.add_cog(Welcome())
 
