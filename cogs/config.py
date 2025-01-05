@@ -49,6 +49,7 @@ class Config(Cog):
         roles_removed="a list of roles for this reward to remove, must be seperated by a comma"
     )
     async def config_levels_reward(self, interaction:Interaction, level:int, roles_added:str=None, roles_removed:str=None):
+        config = get_config(self.bot, interaction.guild_id)
         try:
             roles_added_ids = [int(role.strip().strip('<@&').strip('>')) for role in roles_added.split(',')] if roles_added else []
             roles_removed_ids = [int(role.strip().strip('<@&').strip('>')) for role in roles_removed.split(',')] if roles_removed else []
@@ -56,10 +57,7 @@ class Config(Cog):
             return await interaction.response.send_message("An error occured! did you forget to put a , between roles?")
         
        
-        config.update_one(
-        {
-            "server_id":interaction.guild_id
-        },
+        config.edit(
         {
             "$set": {
                 f"level_rewards.{level}": 
@@ -84,9 +82,11 @@ class Config(Cog):
     async def moderation_set_channel(self, interaction:Interaction, type:ChannelType, channel:TextChannel=None):
         config = get_config(self.bot, interaction.guild_id)
 
+        #control variables
         _set = "$set" if channel else "$unset"
         channel_id = channel.id if channel else  ''
         mention = channel.mention if channel else '`None`'
+
         match type.value:
             case ChannelType.moderation_logs.value:
                 config.edit({_set:{"mod_logs_channel":channel_id}})
