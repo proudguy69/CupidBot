@@ -1,6 +1,7 @@
 from database.databasev2 import MODERATION
 from discord import User, Embed
 from discord.ext.commands import Bot
+from database.configdb import get_config
 
 
 
@@ -11,7 +12,9 @@ class NoDataException(BaseException):
 
 class Case():
     def __init__(self, bot:Bot, data:dict, resp_id:str=None):
+        self.bot = bot
         self.id = data.get("id")
+        self.server_id = data.get('server_id')
         self._id = resp_id if resp_id else str(data.get('_id'))
         self.target = bot.get_user(data.get("target_id"))
         self.target_name = data.get("target_name")
@@ -20,6 +23,8 @@ class Case():
         self.reason = data.get("reason")
         self.duration = data.get("duration")
         self.proof = data.get("proof")
+        self.action_id = data.get('action_id')
+        self.moderation_id = data.get('moderation_id')
         self.embed = self.create_embed()
 
     def create_embed(self) -> Embed:
@@ -31,14 +36,24 @@ class Case():
         embed.add_field(name="Reason:",value=f"`{self.reason}`", inline=False)
         embed.set_footer(text=f"Case ID: {self._id}")
         return embed
+    
+    async def log_action(self):
+        embed=self.create_embed()
+        config = get_config(self.bot, self.server_id)
+        action_logs = config.action_logs
+        if not action_logs: return
+        await action_logs.send(embed=embed)
 
 
 
-def create_case(bot:Bot, type:str, target:User, moderator:User, reason:str, *, duration=None, proof=None) ->Case:
+
+
+def create_case(bot:Bot, server_id:int, type:str, target:User, moderator:User, reason:str, *, duration=None, proof=None) ->Case:
     all_cases = [case for case in MODERATION.find()]
     case_id = len(all_cases) +1
     base_case = {
         "id":case_id,
+        "server_id":server_id,
         "target_id":target.id,
         "target_name":target.name,
         "moderator_id": moderator.id,

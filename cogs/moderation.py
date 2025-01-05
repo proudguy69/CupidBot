@@ -31,7 +31,7 @@ class Moderation(Cog):
     case = Group(name='case',description="A group of all case related commands")
 
     async def process_warn(self, user:User, reason:str):
-        try: user.send(f"You've been warned for {reason}")
+        try: await user.send(f"You've been warned for: `{reason}`")
         except: pass
 
     async def process_duration(self, duration:str) -> int:
@@ -60,7 +60,6 @@ class Moderation(Cog):
         except:pass
         
 
-
     @case.command(name="create", description="creates a case against a user")
     @default_permissions(manage_messages=True)
     @describe(
@@ -82,7 +81,8 @@ class Moderation(Cog):
                 await user.timeout(datetime.timedelta(seconds=timeout_time))
                 self.process_timeout(user, reason)
                 
-        case:Case = create_case(self.bot, type.value, user, interaction.user, reason)
+        case:Case = create_case(self.bot, interaction.guild_id, type.value, user, interaction.user, reason)
+        await case.log_action()
         await interaction.followup.send(embed=case.embed)
     @case_create.error
     async def case_create_error(self, interaction:Interaction, error):
