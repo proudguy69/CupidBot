@@ -16,6 +16,23 @@
   - [x] moderation should have a mod-logs channel for specifc moderation actions
   - [ ] moderation should have "suspended" role (like quarentine)
   - [ ] moderation should have action specific commands (like create case, but for things like kick/ban/etc etc for ease of use, these will use discords built in permissions)
+- [ ] Create a base database obj that has the create, edit, get methods along with self.data and self.doc and self._id datatypes 
+
+```python
+
+# database objects should ingerit this
+class basedbobj():
+  def __init__(self, data, etc):
+    self.data = data
+    self.doc = {"_id"..etc}
+  
+  def edit(self):
+    ...
+  
+  def whatver...
+  
+
+```
 
 
 ### Completed Tasks ✓
