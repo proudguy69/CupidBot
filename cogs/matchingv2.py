@@ -1,5 +1,5 @@
 from database.matchingdb import NoProfileException, UserNotFoundException, get_profile, MATCHING, NoCompatibleProfilesError
-from discord.app_commands import Group, describe, default_permissions
+from discord.app_commands import Group, describe, default_permissions, guild_only
 from discord import Embed, Member, Interaction, TextChannel, NotFound
 from discord.ext.commands import Cog, command, Bot
 from discord.ext import tasks
@@ -37,6 +37,7 @@ class Matching(Cog):
     profile = Group(name="profile", description="a subgroup of profile based commands", parent=matching)
 
     @profile.command(name='create', description='a command to create a profile')
+    @guild_only()
     async def profile_create(self, interaction:Interaction):
         try:
             profile = get_profile(interaction.user, self.bot)
@@ -52,6 +53,7 @@ class Matching(Cog):
     
 
     @profile.command(name='edit', description='a command to edit a profile')
+    @guild_only()
     async def profile_edit(self, interaction:Interaction):
         try:
             profile = get_profile(interaction.user, self.bot)
@@ -63,6 +65,7 @@ class Matching(Cog):
 
 
     @profile.command(name='load', description="loads your profile from a message")
+    @guild_only()
     @describe(channel="The channel where the message is stored",message_id = 'the message id of the embed that has your profile')
     async def profile_load(self, interaction:Interaction, channel:TextChannel, message_id:str):
         try:
@@ -95,6 +98,7 @@ class Matching(Cog):
 
 
     @profile.command(name="view", description="view the profile of yourself or another user")
+    @guild_only()
     @describe(
         member = "The member of the profile you want to see"
     )
@@ -116,6 +120,7 @@ class Matching(Cog):
 
 
     @profile.command(name="status",description="See your approval status for your profile")
+    @guild_only()
     @describe(
         member = "The member of the profile's status you want to see"
     )
@@ -139,6 +144,7 @@ class Matching(Cog):
 
 
     @matching.command(name="compatible", description="see all the compatiable profiles")
+    @guild_only()
     async def compatible(self, interaction:Interaction, member:Member=None):
         if interaction.user.id != 1267552151454875751: return await interaction.response.send_message('command still under construction! check back later', ephemeral=True)
         member = member if member else interaction.user
@@ -147,17 +153,6 @@ class Matching(Cog):
         total = len(compatible)
         await interaction.response.send_message(f"You currently have `{total}` compatible profiles! (this excludes profiles you swiped right on)")
     
-
-    @matching.command(name="compatible-owner", description="Fuck off")
-    async def compatible(self, interaction:Interaction, member:Member=None):
-        if interaction.user.id != 1267552151454875751: return await interaction.response.send_message('This is owner only', ephemeral=True)
-        member = member if member else interaction.user
-        profile = get_profile(member, self.bot)
-        compatible = profile.get_compatible_profiles()
-        description = "\n".join(f"{profile.user.mention} | `{profile.age}`" for profile in compatible)
-        embed = Embed(title=f"All compatible for {interaction.user.name}", description=description)
-        
-        await interaction.response.send_message(embed=embed)
         
         
     
@@ -174,6 +169,7 @@ class Matching(Cog):
 
 
     @matching.command(name="match", description="match with people and find a pair!")
+    @guild_only()
     async def match(self, interaction:Interaction):
         try: profile = get_profile(interaction.user, self.bot)
         except NoProfileException: return await interaction.response.send_message(f"You have no profile! use `/matching profile create` to make one", ephemeral=True)
@@ -187,6 +183,7 @@ class Matching(Cog):
         
     
     @matching.command(name="purge", description="purge all the people you swiped right or left on")
+    @guild_only()
     async def matching_purge(self, interaction:Interaction):
         if interaction.user.id != 1267552151454875751: return await interaction.response.send_message('command still under construction! check back later', ephemeral=True)
         await interaction.response.defer()
