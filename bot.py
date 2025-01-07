@@ -81,7 +81,7 @@ from collections import Counter
 @bot.command()
 @is_owner()
 async def duplicate_check(ctx:Context, user_id:int):
-    profile:dict = MATCHING.find_one({"user_id":860433184252231691})
+    profile:dict = MATCHING.find_one({"user_id":954513064571584554})
     rejected = profile.get('rejected_pairs', [])
 
     counts = Counter(rejected)
