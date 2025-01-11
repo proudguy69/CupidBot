@@ -4,8 +4,9 @@ from discord.app_commands import command, Group, describe
 from discord.ext.commands import Cog, is_owner, Bot
 from database.levelsdb import Level, get_level, create_level, LevelNotFoundException, LEVELS
 from database.configdb import get_config
+from database.databasev2 import UserNotFoundException
 
-import random
+
 
 class Levels(Cog):
     def __init__(self, bot:Bot) -> None:
@@ -19,6 +20,7 @@ class Levels(Cog):
         if user.bot or not message.guild: return
         try: level = get_level(self.bot, user)
         except LevelNotFoundException: level = create_level(self.bot, user)
+        except UserNotFoundException: return
         multiplier = 1
         if user.premium_since: multiplier = 1.5
 
