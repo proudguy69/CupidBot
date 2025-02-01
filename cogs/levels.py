@@ -27,8 +27,11 @@ class Levels(Cog):
         server_config = get_config(self.bot, message.guild.id)
         levels_chan = server_config.level_up_channel
 
-        state, msg = level.inc_xp(multiplier)
-        rewards = server_config.rewards.get_closest_reward(level.level) # get the closest reward
+        try:
+            state, msg = level.inc_xp(multiplier)
+            rewards = server_config.rewards.get_closest_reward(level.level) # get the closest reward
+        except:
+            return
 
         user_roles = set(user.roles)
         new_roles = user_roles.difference(rewards.remove) | set(rewards.add) # the roles the user SHOULD have
@@ -97,7 +100,7 @@ class Levels(Cog):
         await interaction.response.send_message(embed=level_edit_embed)
 
     
-
+    
 
     
 

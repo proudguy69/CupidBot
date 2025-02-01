@@ -12,6 +12,10 @@ class ChannelType(Enum):
     action_logs = "Action Logs"
     
 
+class RoleType(Enum):
+    suspended = "Suspended"
+    staff = "Staff"
+
 
 class Config(Cog):
     def __init__(self, bot:Bot):
@@ -99,3 +103,18 @@ class Config(Cog):
 
 
         await interaction.response.send_message(embed=config_update)
+    
+
+
+    @moderation.command(name="set_role", description="sets default roles and staff roles for certain moderation actions")
+    @default_permissions(administrator=True)
+    @describe(type="the type of role to set of", role="the role to set the type of")
+    async def moderation_set_channel(self, interaction:Interaction, type:RoleType, role:Role):
+        config = get_config(self.bot, interaction.guild_id)
+
+
+
+        
+
+
+        await interaction.response.send_message(f"I have set `{type.value}` to `{role.name}`")

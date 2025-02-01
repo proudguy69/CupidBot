@@ -128,7 +128,9 @@ class Profile():
         description=description,
         color=color)
         profile_embed.set_footer(text=f'Profile Id: {self._id}')
-        profile_embed.set_author(name=self.user.global_name, icon_url=self.user.avatar.url)
+        try:
+            profile_embed.set_author(name=self.user.global_name, icon_url=self.user.avatar.url)
+        except AttributeError: pass # ignore if the user has no pfp
 
         return profile_embed
     

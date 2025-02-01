@@ -11,6 +11,7 @@
 - [ ] add functionailty to moderation ~ 4d anyone
   - [ ] Should have a way to set staff roles and staff permissions
   - [ ] moderation should be like wick
+  - [ ] roles should have their own permissions
   - [x] moderation should have config for log channels --
   - [ ] moderation should have events that you can opt-into listening
   - [x] moderation should have a mod-logs channel for specifc moderation actions

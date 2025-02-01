@@ -59,8 +59,10 @@ class Config():
         # moderation config
         self.mod_logs = self.server.get_channel(data.get('mod_logs_channel'))
         self.action_logs = self.server.get_channel(data.get('action_logs_channel'))
-
+        self.suspend_role = data.get('suspend_role')
+        self.staff_role = data.get('staff_role')
         
+
         # base stuff
         self._id = data.get('_id')
         self.doc = {'_id':self._id}
